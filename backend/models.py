@@ -1,15 +1,16 @@
  
 from flask import Flask
-# from config import *
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_moment import Moment
 
+database_path = 'postgres://hkkekeqmxyxrss:fccdc54c7ca9c40dea56c6326c05c57ff2e2afbbd8a5fb7407314b3064ffac30@ec2-52-55-59-250.compute-1.amazonaws.com:5432/d3l49h14ujn7on'
+
 db = SQLAlchemy()
 
-
-def db_setup(app):
+def db_setup(app, database_path = database_path):
     app.config.from_object('config')
+    app.config['SQLALCHEMY_DATABASE_URL']= database_path
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
     db.app = app
     migrate = Migrate(app, db)
@@ -24,8 +25,7 @@ class Actor(db.Model):
     name = db.Column(db.String)
     age = db.Column(db.String(120))
     gender = db.Column(db.String(120))
-    # shows = db.relationship("Show", backref=db.backref("showss", lazy=True))
-  
+
     def __repr__(self):
       return f'<Actor: { self.name }>'
 
@@ -38,46 +38,19 @@ class Movie(db.Model):
     title = db.Column(db.String)
     release_date = db.Column(db.String(120))
 
-    # shows = db.relationship("Show", backref=db.backref("shows", lazy=True))
 
     def __repr__(self):
       return f'<Movie: { self.title }>'
-    
-    
-    '''
-    insert()
-        inserts a new model into a database
-        the model must have a unique name
-        the model must have a unique id or null id
-        EXAMPLE
-            drink = Drink(title=req_title, recipe=req_recipe)
-            drink.insert()
-    '''
+
+
     def insert(self):
         db.session.add(self)
         db.session.commit()
 
-    '''
-    delete()
-        deletes a new model into a database
-        the model must exist in the database
-        EXAMPLE
-            drink = Drink(title=req_title, recipe=req_recipe)
-            drink.delete()
-    '''
     def delete(self):
         db.session.delete(self)
         db.session.commit()
 
-    '''
-    update()
-        updates a new model into a database
-        the model must exist in the database
-        EXAMPLE
-            drink = Drink.query.filter(Drink.id == id).one_or_none()
-            drink.title = 'Black Coffee'
-            drink.update()
-    '''
     def update(self):
         db.session.commit()
       

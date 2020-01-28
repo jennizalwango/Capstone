@@ -1,28 +1,16 @@
 import json
 
 from flask import Flask, request, jsonify, abort
-from flask_cors import CORS
-
 from auth import requires_auth
+
 from models import Movie, Actor, db_setup
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 # db_drop_and_create_all()
 
 ## ROUTES
-
-@app.after_request
-def after_request(response):
-    
-    """ configuring CORS"""
-    response.headers.add('Access-Control-Allow-Headers',
-                         'Content-Type,Authorization,true')
-    response.headers.add('Access-Control-Allow-Methods',
-                         'GET,PATCH,POST,DELETE,OPTIONS')
-    return response
 
 @app.route('/')
 def home():
