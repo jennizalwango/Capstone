@@ -1,21 +1,17 @@
- 
-from flask import Flask
-from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
-from flask_moment import Moment
 
-database_path = 'postgres://hkkekeqmxyxrss:fccdc54c7ca9c40dea56c6326c05c57ff2e2afbbd8a5fb7407314b3064ffac30@ec2-52-55-59-250.compute-1.amazonaws.com:5432/d3l49h14ujn7on'
+from flask_sqlalchemy import SQLAlchemy
+
 
 db = SQLAlchemy()
 
-def db_setup(app, database_path = database_path):
-    app.config.from_object('config')
-    app.config['SQLALCHEMY_DATABASE_URL']= database_path
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
-    db.app = app
-    migrate = Migrate(app, db)
-    db.init_app(app)
-    return db
+# def db_setup(app, database_path = database_path):
+#     app.config.from_object('config')
+#     app.config['SQLALCHEMY_DATABASE_URL']= database_path
+#     app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
+#     db.app = app
+#     migrate = Migrate(app, db)
+#     db.init_app(app, migrate)
+#     return db
 
 
 class Actor(db.Model):
@@ -54,5 +50,5 @@ class Movie(db.Model):
     def update(self):
         db.session.commit()
       
-# # db.init_app(app)
-# # db.create_all()
+# db.init_app(app)
+# db.create_all()

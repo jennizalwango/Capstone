@@ -1,14 +1,17 @@
 import json
-
+import os
 from flask import Flask, request, jsonify, abort
-from auth import requires_auth
-
-from models import Movie, Actor, db_setup
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from auth import AuthError, requires_auth
+from models import Movie, Actor, db
 
 app = Flask(__name__)
+app.config.from_object('config')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+migrate = Migrate(app, db)
+db.init_app(app)
 
-
-# db_drop_and_create_all()
 
 ## ROUTES
 
