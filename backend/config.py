@@ -32,4 +32,4 @@ class BaseConfig:
 #     """
 #     DEBUG = False
 
-SQLALMEMY_DATABASE_URI = 'postgres://hkkekeqmxyxrss:fccdc54c7ca9c40dea56c6326c05c57ff2e2afbbd8a5fb7407314b3064ffac30@ec2-52-55-59-250.compute-1.amazonaws.com:5432/d3l49h14ujn7on'
+SQLALMEMY_DATABASE_URI = 'postgres://aynfsfqgbdvyfp:a9d37d905a49931414b728b2e754d910a149028de26647eee8d2abf5e9e07b33@ec2-54-174-221-35.compute-1.amazonaws.com:5432/d8fqcfq8mq61n7'
