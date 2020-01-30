@@ -4,11 +4,9 @@ from flask import Flask, request, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from auth import AuthError, requires_auth
-from models import Movie, Actor, db
+from models import Movie, Actor, db_setup
 
 app = Flask(__name__)
-app.config.from_object('config')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 migrate = Migrate(app, db)
 db.init_app(app)
 
@@ -29,7 +27,7 @@ def get_all_movies():
     movies = Movie.query.all()
     return jsonify({
         "success": True,
-        "drinks": movies
+        "movies": movies
     }),200
     
 
@@ -195,3 +193,9 @@ def user_error(error):
         "message":error.description
     }),400
     
+# if __name__ == '__main__':
+#     APP.run(host='0.0.0.0', port=8080, debug=True)
+
+
+if __name__ =='__main__':
+    app.run()

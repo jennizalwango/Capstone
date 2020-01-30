@@ -2,6 +2,7 @@ import json
 from flask import request, _request_ctx_stack, abort
 from functools import wraps
 from urllib.request import urlopen
+from jose import jwt
 
 AUTH0_DOMAIN = 'ellieserry.auth0.com'
 ALGORITHMS = ['RS256']

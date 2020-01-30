@@ -1,17 +1,16 @@
 
 from flask_sqlalchemy import SQLAlchemy
 
-
+DATABASE_URI = 'postgres://gtkobtgaiovffn:ae5290ccf64770f13834b50250041cb0f83201359730308bd763ce72bbe9b9b0@ec2-34-224-55-230.compute-1.amazonaws.com:5432/da5sjir1610ap6
+'
 db = SQLAlchemy()
 
-# def db_setup(app, database_path = database_path):
-#     app.config.from_object('config')
-#     app.config['SQLALCHEMY_DATABASE_URL']= database_path
-#     app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
-#     db.app = app
-#     migrate = Migrate(app, db)
-#     db.init_app(app, migrate)
-#     return db
+def db_setup(app, database_path = DATABASE_PATH):
+    app.config['SQLALCHEMY_DATABASE_URL']= database_path
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
+    db.app = app
+    db.init_app(app)
+    db.create_all()
 
 
 class Actor(db.Model):
@@ -21,11 +20,18 @@ class Actor(db.Model):
     name = db.Column(db.String)
     age = db.Column(db.String(120))
     gender = db.Column(db.String(120))
+    
+    def format(self):
+        '''
+        serialize Actor table data for a json object
+        '''
+        return{
+            'id': self.id,
+            'name': self.name,
+            'age' : self.age,
+            'gender': self.gender
+        }
 
-    def __repr__(self):
-      return f'<Actor: { self.name }>'
-
-    # TODO: implement any missing fields, as a database migration using Flask-Migrate
 
 class Movie(db.Model):
     __tablename__ = 'Movie'
@@ -33,10 +39,6 @@ class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
     release_date = db.Column(db.String(120))
-
-
-    def __repr__(self):
-      return f'<Movie: { self.title }>'
 
 
     def insert(self):
@@ -49,6 +51,17 @@ class Movie(db.Model):
 
     def update(self):
         db.session.commit()
+        
+    
+    def format(self):
+        '''
+        serialize Actor table data for a json object
+        '''
+        return{
+            'id': self.id,
+            'title': self.title,
+            'release_date : self.release_date'
+        }
       
 # db.init_app(app)
 # db.create_all()
