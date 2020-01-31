@@ -1,8 +1,8 @@
 
 from flask_sqlalchemy import SQLAlchemy
 
-DATABASE_URI = 'postgres://gtkobtgaiovffn:ae5290ccf64770f13834b50250041cb0f83201359730308bd763ce72bbe9b9b0@ec2-34-224-55-230.compute-1.amazonaws.com:5432/da5sjir1610ap6
-'
+DATABASE_PATH = 'postgres://qsaryvrkeckcef:e23e216dd6a4a0e353ff13f6b606e86e79658f137389c3eca74a740469a683dd@ec2-54-243-197-120.compute-1.amazonaws.com:5432/dbpdg9dt8ev9ti'
+
 db = SQLAlchemy()
 
 def db_setup(app, database_path = DATABASE_PATH):
@@ -60,7 +60,7 @@ class Movie(db.Model):
         return{
             'id': self.id,
             'title': self.title,
-            'release_date : self.release_date'
+            'release_date' : self.release_date
         }
       
 # db.init_app(app)
