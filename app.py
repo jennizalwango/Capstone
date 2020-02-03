@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify, abort
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from auth import AuthError, requires_auth
-from models import Movie, Actor, db_setup
+from models import Movie, Actor, db_setup, db
 
 ## ROUTES
 def create_app():
@@ -26,7 +26,7 @@ def create_app():
         movies = Movie.query.all()
         return jsonify({
             "success": True,
-            "movies": movies
+            "all_movies": movies
         }),200
         
 
@@ -37,12 +37,13 @@ def create_app():
         data = request.get_json()
         
         title = data.get('title')
+        release_date = data.get('release_date')
         
-        movie = Movie(title=title)
+        movie = Movie(title=title, release_date=release_date)
         movie.insert()
         return jsonify({
             'success': True, 
-            'drinks': movie
+            'movies': movie
         })
         
         
@@ -50,15 +51,14 @@ def create_app():
     @requires_auth('patch:movies')
     def edit_movie(id):
         data = request.get_json()
-        
-        movie = data.get('movie')
-        
+                
         movies = Movie.query.filter(Movie.id ==id).one_or_none()
 
         if not movie:
             abort(404)
-            
+        movie.title = data.get('title', movie.title)
         movies.update()
+        
         return jsonify ({
             "success":True,
             "movies": movies 
@@ -89,7 +89,7 @@ def create_app():
         actors = Actor.query.all()
         return jsonify({
             "success": True,
-            "drinks": actors
+            "all_actors": actors.format()
         }),200
         
 
@@ -103,31 +103,41 @@ def create_app():
         age = data.get('age')
         gender = data.get('gender')
         
-        actor = Actor(name=name, age=age, gender=gender)
-        actor.insert()
+        actor = Actor(
+            name=name, 
+            age=age, 
+            gender=gender
+            )
+        db.session.add(actor)
+        db.session.commit()
+        
+        # actor.insert()
+          
         return jsonify({
             'success': True, 
-            'actors': actor
-        })
+            'actors': actor.format()
+        }), 201
         
 
     @app.route('/actors/<int:id>', methods =['PATCH'])
     @requires_auth('patch:actors')
-    def edit_actors(id):
+    def edit_actor(id):
         data = request.get_json()
         
-        actor = data.get('actor')
-        
-        actors = Actor.query.filter(Actor.id ==id).one_or_none()
-
+        actor = Actor.query.filter(Actor.id ==id).one_or_none()
+                
         if not actor:
             abort(404)
-            
-        actors.update()
+        
+        actor.name = data.get('name', actor.name)
+        actor.age = data.get('age', actor.age)
+        actor.gender = data.get('gender', actor.gender)  
+         
+        actor.update()
         return jsonify ({
             "success":True,
-            "movies": actors 
-        }),  200
+            "actors": actor.format()
+        }), 200
         
         
     @app.route('/actors/<int:id>', methods=['DELETE'])
@@ -136,15 +146,14 @@ def create_app():
         
         actor = Actor.query.filter(Actor.id ==id).one_or_none()
         
-        if not actor:
-            abort(404)
-            
+        if actor is None:
+            abort(404, 'sorry actor not found')    
         actor.delete()
         
         return jsonify({
             "success": True,
             "delete": id
-        })
+        }), 200
         
     ## Error Handling
     '''

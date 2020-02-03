@@ -21,6 +21,11 @@ class Actor(db.Model):
     age = db.Column(db.String(120))
     gender = db.Column(db.String(120))
     
+    def __init__(self, name, age, gender):
+        self.name = name,
+        self.age = age,
+        self.gender = gender
+    
     def format(self):
         '''
         serialize Actor table data for a json object
@@ -39,6 +44,10 @@ class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
     release_date = db.Column(db.String(120))
+    
+    def __init__(self, title, release_date):
+        self.title = title,
+        self.release_date = release_date
 
 
     def insert(self):
