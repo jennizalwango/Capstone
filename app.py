@@ -18,19 +18,19 @@ def create_app():
         return 'Welcome to capstone' 
               
 
-
     @app.route('/movies')
     @requires_auth('get:movies')
     def get_all_movies():
         
         movies = Movie.query.all()
+            
         return jsonify({
             "success": True,
-            "all_movies": movies
+            "all_movies": [movies.format() for movies in movies]
         }),200
         
 
-    @app.route('/movies', methods=['POST'])
+    @app.route('/movies/create', methods=['POST'])
     @requires_auth('post:movies')
     def create_movie():
         
@@ -43,7 +43,7 @@ def create_app():
         movie.insert()
         return jsonify({
             'success': True, 
-            'movies': movie
+            'movies': movie.format()
         })
         
         
@@ -54,14 +54,15 @@ def create_app():
                 
         movies = Movie.query.filter(Movie.id ==id).one_or_none()
 
-        if not movie:
+        if not movies:
             abort(404)
-        movie.title = data.get('title', movie.title)
+            
+        movies.title = data.get('title', movies.title)
         movies.update()
         
         return jsonify ({
             "success":True,
-            "movies": movies 
+            "movies": movies.format()
         }),  200
         
         
@@ -79,7 +80,7 @@ def create_app():
         return jsonify({
             "success": True,
             "delete": id
-        })
+        }), 200
         
 
     @app.route('/actors')
@@ -89,11 +90,11 @@ def create_app():
         actors = Actor.query.all()
         return jsonify({
             "success": True,
-            "all_actors": actors.format()
+            "all_actors": [actors.format() for actors in actors]
         }),200
         
 
-    @app.route('/actors', methods=['POST'])
+    @app.route('/actors/create', methods=['POST'])
     @requires_auth('post:actors')
     def create_actor():
         
@@ -110,8 +111,6 @@ def create_app():
             )
         db.session.add(actor)
         db.session.commit()
-        
-        # actor.insert()
           
         return jsonify({
             'success': True, 
@@ -132,8 +131,8 @@ def create_app():
         actor.name = data.get('name', actor.name)
         actor.age = data.get('age', actor.age)
         actor.gender = data.get('gender', actor.gender)  
-         
-        actor.update()
+        db.session.commit()
+        
         return jsonify ({
             "success":True,
             "actors": actor.format()
@@ -146,9 +145,12 @@ def create_app():
         
         actor = Actor.query.filter(Actor.id ==id).one_or_none()
         
-        if actor is None:
-            abort(404, 'sorry actor not found')    
-        actor.delete()
+        if not actor:
+            abort(404)
+            
+        # actor.delete()
+        db.session.add(actor)
+        db.session.commit()
         
         return jsonify({
             "success": True,

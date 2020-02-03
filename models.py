@@ -1,16 +1,16 @@
 
 from flask_sqlalchemy import SQLAlchemy
 
-DATABASE_PATH = 'postgres://qsaryvrkeckcef:e23e216dd6a4a0e353ff13f6b606e86e79658f137389c3eca74a740469a683dd@ec2-54-243-197-120.compute-1.amazonaws.com:5432/dbpdg9dt8ev9ti'
-
+DATABASE_PATH = 'postgres://sgxcqirecstqak:3aef306fac7303731134404c39175767d14399b6cfb94b2a3c63937d25794924@ec2-3-220-86-239.compute-1.amazonaws.com:5432/d6hj3k2cvv4nq1'
 db = SQLAlchemy()
 
 def db_setup(app, database_path = DATABASE_PATH):
-    app.config['SQLALCHEMY_DATABASE_URL']= database_path
+    app.config['SQLALCHEMY_DATABASE_URI']= database_path
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
     db.app = app
     db.init_app(app)
     db.create_all()
+    
 
 
 class Actor(db.Model):
