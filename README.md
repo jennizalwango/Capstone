@@ -2,6 +2,10 @@
 
  Capstone is a casting ungency 
 
+## Heroku
+Follow the link above to access the deployed app on heroku https://casting-capstone.herokuapp.com/
+
+
 ## Getting Started
 
 ### Installing Dependencies
